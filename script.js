@@ -222,7 +222,7 @@ function confirmSetStreak() {
 
   saveData({
     streak: val,
-    lastCheckin: null,
+    lastCheckin: todayStr(), 
     bestStreak: newBest
   });
 
