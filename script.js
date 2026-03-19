@@ -17,7 +17,10 @@ const TITLES = [
 const STORAGE_KEY = "l0calgh0st_streak_epic";
 
 function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  return d.getFullYear() + "-" +
+         String(d.getMonth() + 1).padStart(2, '0') + "-" +
+         String(d.getDate()).padStart(2, '0');
 }
 
 function loadData() {
