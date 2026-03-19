@@ -23,6 +23,13 @@ function todayStr() {
          String(d.getDate()).padStart(2, '0');
 }
 
+function daysBetween(date1, date2) {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+  const diff = d2 - d1;
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
 function loadData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -139,17 +146,37 @@ function spawnParticles(color) {
 
 function handleSuccess() {
   const d = loadData();
-  if (d.lastCheckin === todayStr()) return;
+  const today = todayStr();
+
+  if (d.lastCheckin) {
+    const diff = daysBetween(d.lastCheckin, today);
+
+    if (diff === 0) return;
+
+    if (diff > 1) {
+      d.streak = 0;
+    }
+  }
+
   const newStreak = d.streak + 1;
   const newBest = Math.max(d.bestStreak, newStreak);
-  saveData({ streak: newStreak, lastCheckin: todayStr(), bestStreak: newBest });
+
+  saveData({
+    streak: newStreak,
+    lastCheckin: today,
+    bestStreak: newBest
+  });
+
   const t = getTitle(newStreak);
   spawnParticles(t.color);
+
   const card = document.getElementById("mainCard");
   card.classList.remove("anim-pulse");
   void card.offsetWidth;
   card.classList.add("anim-pulse");
+
   setTimeout(() => card.classList.remove("anim-pulse"), 700);
+
   render();
 }
 
@@ -160,11 +187,14 @@ function confirmFail() {
   const d = loadData();
   saveData({ streak: 0, lastCheckin: null, bestStreak: d.bestStreak });
   closeModal();
+
   const card = document.getElementById("mainCard");
   card.classList.remove("anim-shake");
   void card.offsetWidth;
   card.classList.add("anim-shake");
+
   setTimeout(() => card.classList.remove("anim-shake"), 600);
+
   render();
 }
 
@@ -180,17 +210,27 @@ function closeSetModal() {
 
 function confirmSetStreak() {
   const val = parseInt(document.getElementById("streakInput").value);
+
   if (isNaN(val) || val < 0) {
     document.getElementById("streakInput").style.borderColor = "rgba(255,60,60,0.5)";
     setTimeout(() => document.getElementById("streakInput").style.borderColor = "rgba(255,255,255,0.12)", 1000);
     return;
   }
+
   const d = loadData();
   const newBest = Math.max(d.bestStreak, val);
-  saveData({ streak: val, lastCheckin: null, bestStreak: newBest });
+
+  saveData({
+    streak: val,
+    lastCheckin: null,
+    bestStreak: newBest
+  });
+
   closeSetModal();
+
   const t = getTitle(val);
   spawnParticles(t.color);
+
   render();
 }
 
@@ -200,8 +240,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Escape") closeSetModal();
   });
 
-  document.getElementById("modal").addEventListener("click", function(e) { if (e.target === this) closeModal(); });
-  document.getElementById("setModal").addEventListener("click", function(e) { if (e.target === this) closeSetModal(); });
+  document.getElementById("modal").addEventListener("click", function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  document.getElementById("setModal").addEventListener("click", function(e) {
+    if (e.target === this) closeSetModal();
+  });
 
   render();
 });
