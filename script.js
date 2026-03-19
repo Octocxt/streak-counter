@@ -1,4 +1,3 @@
-const APP_VERSION = 2;
 const TITLES = [
   { days: 0,   emoji: "💀", title: "Mortal",           color: "#777777", dark: "#333333", rank: "I"    },
   { days: 1,   emoji: "🌱", title: "Awakened",         color: "#6BCB77", dark: "#2d6b33", rank: "II"   },
@@ -18,30 +17,31 @@ const TITLES = [
 const STORAGE_KEY = "l0calgh0st_streak_epic";
 const APP_VERSION = 2;
 
+// ── Migrations ────────────────────────────────────────────────────────────────
+
 function runMigrations() {
   let version = parseInt(localStorage.getItem("app_version")) || 0;
 
-  // 🔹 Version 1 → add daily quote system
+  // Version 1 → add daily quote system
   if (version < 1) {
     localStorage.removeItem("daily_quote");
     version = 1;
   }
 
-  // 🔹 Version 2 → fix manual streak bug
+  // Version 2 → fix manual streak bug
   if (version < 2) {
     const data = loadData();
-
     if (data.lastCheckin === null && data.streak > 0) {
       data.lastCheckin = todayStr();
       saveData(data);
     }
-
     version = 2;
   }
+
   localStorage.setItem("app_version", version);
 }
-  localStorage.setItem("app_version", version);
-}
+
+// ── Storage ───────────────────────────────────────────────────────────────────
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -59,6 +59,8 @@ function saveData(d) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch(e) {}
 }
 
+// ── Titles ────────────────────────────────────────────────────────────────────
+
 function getTitle(streak) {
   let cur = TITLES[0];
   for (const t of TITLES) { if (streak >= t.days) cur = t; }
@@ -69,6 +71,8 @@ function getNextTitle(streak) {
   for (const t of TITLES) { if (t.days > streak) return t; }
   return null;
 }
+
+// ── Render ────────────────────────────────────────────────────────────────────
 
 function render() {
   const d = loadData();
@@ -146,6 +150,8 @@ function render() {
   }
 }
 
+// ── Particles ─────────────────────────────────────────────────────────────────
+
 function spawnParticles(color) {
   const colors = [color, "#FFD700", "#fff", color, "#FFA500", "#fff"];
   for (let i = 0; i < 20; i++) {
@@ -160,6 +166,8 @@ function spawnParticles(color) {
     setTimeout(() => p.remove(), 1900);
   }
 }
+
+// ── Handlers ──────────────────────────────────────────────────────────────────
 
 function handleSuccess() {
   const d = loadData();
@@ -218,21 +226,7 @@ function confirmSetStreak() {
   render();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("streakInput").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") confirmSetStreak();
-    if (e.key === "Escape") closeSetModal();
-  });
-
-  document.getElementById("modal").addEventListener("click", function(e) { if (e.target === this) closeModal(); });
-  document.getElementById("setModal").addEventListener("click", function(e) { if (e.target === this) closeSetModal(); });
-
-  render();
-  loadQuote();
-  checkVersion();
-});
-
-// Quotes
+// ── Quotes ────────────────────────────────────────────────────────────────────
 
 const fallbackQuotes = [
   "You showed up today.",
@@ -360,3 +354,19 @@ function loadQuote() {
       setQuote(random);
     });
 }
+
+// ── Init ──
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("streakInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") confirmSetStreak();
+    if (e.key === "Escape") closeSetModal();
+  });
+
+  document.getElementById("modal").addEventListener("click", function(e) { if (e.target === this) closeModal(); });
+  document.getElementById("setModal").addEventListener("click", function(e) { if (e.target === this) closeSetModal(); });
+
+  runMigrations();
+  render();
+  loadQuote();
+});
