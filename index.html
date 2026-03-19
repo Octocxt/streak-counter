@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Streak Counter</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="card" id="mainCard">
+    <div class="best-badge" id="bestBadge" style="display:none">Best: <span id="bestNum">0</span>d</div>
+
+    <div class="emoji-display" id="titleEmoji">💀</div>
+    <span class="title-text" id="titleText" style="--title-color:#666">Mortal</span>
+    <div class="title-rank" id="titleRank">RANK I · DAY 0</div>
+    <div class="divider" id="divider"></div>
+
+    <div class="streak-number" id="streakNum" style="--title-color:#666; --title-glow:#66666644">0</div>
+    <div class="streak-label">Days of Discipline</div>
+
+    <div class="progress-section" id="progressSection">
+      <div class="progress-header">
+        <span id="nextTitleLabel">Next: 🌱 Awakened</span>
+        <span id="nextTitleDays">1 day away</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="checkin-done" id="checkinDone" style="display:none">
+      ⚔️ Today's battle won. Return tomorrow.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-success" id="btnSuccess" onclick="handleSuccess()">⚔️ Succeeded</button>
+      <button class="btn-fail" onclick="handleFail()">💀 Failed</button>
+    </div>
+
+    <button class="btn-set-streak" onclick="openSetStreak()">✏️ Set Streak Manually</button>
+  </div>
+
+  <div class="titles-section">
+    <div class="titles-label">Power Ranks</div>
+    <div class="titles-grid" id="titlesGrid"></div>
+  </div>
+  
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-emoji">⚰️</div>
+      <div class="modal-title">Your Power Fades</div>
+      <div class="modal-desc" id="modalDesc">Resetting your streak means falling back to Mortal. Rise again — every legend has fallen before.</div>
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="closeModal()">Retreat</button>
+        <button class="modal-confirm" onclick="confirmFail()">Fall</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="setModal">
+    <div class="modal set-modal">
+      <div class="modal-emoji">✏️</div>
+      <div class="modal-title">Set Your Streak</div>
+      <div class="modal-desc">Already have a streak going? Enter your current day count below.</div>
+      <input class="streak-input" id="streakInput" type="number" min="0" max="9999" placeholder="Enter days..." />
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="closeSetModal()">Cancel</button>
+        <button class="btn-set-confirm" onclick="confirmSetStreak()">⚡ Set Streak</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
