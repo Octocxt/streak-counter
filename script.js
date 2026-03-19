@@ -16,14 +16,31 @@ const TITLES = [
 ];
 
 const STORAGE_KEY = "l0calgh0st_streak_epic";
+const APP_VERSION = 2;
 
-function checkVersion() {
-  const savedVersion = localStorage.getItem("app_version");
+function runMigrations() {
+  let version = parseInt(localStorage.getItem("app_version")) || 0;
 
-  if (savedVersion !== APP_VERSION) {
+  // 🔹 Version 1 → add daily quote system
+  if (version < 1) {
     localStorage.removeItem("daily_quote");
-    localStorage.setItem("app_version", APP_VERSION);
+    version = 1;
   }
+
+  // 🔹 Version 2 → fix manual streak bug
+  if (version < 2) {
+    const data = loadData();
+
+    if (data.lastCheckin === null && data.streak > 0) {
+      data.lastCheckin = todayStr();
+      saveData(data);
+    }
+
+    version = 2;
+  }
+  localStorage.setItem("app_version", version);
+}
+  localStorage.setItem("app_version", version);
 }
 
 function todayStr() {
