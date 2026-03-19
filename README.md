@@ -93,4 +93,6 @@ This project is licensed under the MIT License.
 ## 👤 Author
 
 Built by Octocxt
+l0cal.gh0st @ Discord
+l0c4l.gh0st @ Instagram
 
