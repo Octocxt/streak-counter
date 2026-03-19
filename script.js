@@ -1,3 +1,4 @@
+const APP_VERSION = "1.1";
 const TITLES = [
   { days: 0,   emoji: "💀", title: "Mortal",           color: "#777777", dark: "#333333", rank: "I"    },
   { days: 1,   emoji: "🌱", title: "Awakened",         color: "#6BCB77", dark: "#2d6b33", rank: "II"   },
@@ -15,6 +16,15 @@ const TITLES = [
 ];
 
 const STORAGE_KEY = "l0calgh0st_streak_epic";
+
+function checkVersion() {
+  const savedVersion = localStorage.getItem("app_version");
+
+  if (savedVersion !== APP_VERSION) {
+    localStorage.removeItem("daily_quote");
+    localStorage.setItem("app_version", APP_VERSION);
+  }
+}
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -202,6 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   render();
   loadQuote();
+  checkVersion();
 });
 
 // Quotes
