@@ -1,4 +1,4 @@
-const APP_VERSION = "1.1";
+const APP_VERSION = 2;
 const TITLES = [
   { days: 0,   emoji: "💀", title: "Mortal",           color: "#777777", dark: "#333333", rank: "I"    },
   { days: 1,   emoji: "🌱", title: "Awakened",         color: "#6BCB77", dark: "#2d6b33", rank: "II"   },
