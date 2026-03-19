@@ -94,5 +94,5 @@ This project is licensed under the MIT License.
 
 Built by Octocxt.
 * l0cal.gh0st @ Discord
-* l0c4l.gh0st @ Instagram
+* [l0c4l.gh0st](https://www.instagram.com/l0c4l.gh0st/) @ Instagram
 
