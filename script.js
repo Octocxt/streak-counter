@@ -355,7 +355,7 @@ function loadQuote() {
     });
 }
 
-// ── Init ──
+// ── Init ──────────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("streakInput").addEventListener("keydown", (e) => {
