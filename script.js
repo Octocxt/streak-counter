@@ -44,7 +44,11 @@ function runMigrations() {
 // ── Storage ───────────────────────────────────────────────────────────────────
 
 function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function loadData() {
@@ -219,7 +223,7 @@ function confirmSetStreak() {
   }
   const d = loadData();
   const newBest = Math.max(d.bestStreak, val);
-  saveData({ streak: val, lastCheckin: null, bestStreak: newBest });
+  saveData({ streak: val, lastCheckin: todayStr(), bestStreak: newBest });
   closeSetModal();
   const t = getTitle(val);
   spawnParticles(t.color);
